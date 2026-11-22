@@ -121,6 +121,15 @@ Galactica is a raw base model, so the runtime doesn't trust it:
 
 Ask it who it is, which model it is, or who built it, and it answers from **fixed text, honestly**: a 5.9M-parameter W-JEPA trained by Teerth Sharma, with frozen Galactica-6.7B writing the words. It's not a chat model, and it says so.
 
+## The lemmas behind it
+
+The rules Alcyone computes exactly are proved, not assumed:
+- **The proofs:** Lean 4, 1,818 built declarations with no `sorry`, counted from build manifests.
+- **The mirrors:** executable Haskell versions with QuickCheck property tests.
+- **The hydraulics:** the watershed rules live in `WatershedLemmas`: the beta0 step, the elder rule, water conserved under spills, n-1 merges and graph Poincaré-Hopf.
+
+Find them in [`lemmas/`](https://huggingface.co/teerthsharma/Alcyone-W/tree/main/lemmas) on Hugging Face.
+
 ## Honest limits
 
 - **Narrow:** one detector format (CMS NanoAOD objects) and one task family.
