@@ -139,7 +139,7 @@ Galactica is not instruction-tuned, so the runtime enforces the protocol: tool f
 
 ## Open problems
 
-These are the questions we find most interesting. Discussion is welcome in [Discussions](https://github.com/teerthsharma/Alcyone-W/discussions).
+These are the questions we find most interesting. Start with the [introduction thread](https://github.com/teerthsharma/Alcyone-W/discussions/1), then bring questions to [Q&A](https://github.com/teerthsharma/Alcyone-W/discussions/categories/q-a), new directions to [Ideas](https://github.com/teerthsharma/Alcyone-W/discussions/categories/ideas), and things you have built to [Show and tell](https://github.com/teerthsharma/Alcyone-W/discussions/categories/show-and-tell). Bugs go in [Issues](https://github.com/teerthsharma/Alcyone-W/issues).
 
 - **Other invariants.** $\beta_0$ of sublevel sets is the simplest choice. What about $\beta_1$, merge trees, or the full persistence diagram as the target? Lakes are $\beta_0$; islands in lakes are where it gets interesting.
 - **Other spaces.** Nothing here is specific to collisions. Any data with a natural height function (images, fields, point clouds with a density, graphs with node weights) admits the same construction.
