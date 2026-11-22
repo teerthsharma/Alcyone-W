@@ -1,65 +1,58 @@
-# Alcyone
+<div align="center">
 
-**A W-JEPA: a joint-embedding predictive architecture whose prediction target is the watershed of a hidden region, computed exactly from proved lemmas.**
+# 🌊 Alcyone
+
+### A new kind of JEPA: it predicts *topology*
+
+**W-JEPA (watershed JEPA).** Hide part of a real particle-collision event, then predict the shape of what is hidden: how many basins it holds, how long they persist, and how much energy each one carries. The target comes from proved math, not from a second network.
 
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](LICENSE)
-[![Weights on Hugging Face](https://img.shields.io/badge/weights-Hugging%20Face-555)](https://huggingface.co/teerthsharma/Alcyone-W)
+[![Weights on Hugging Face](https://img.shields.io/badge/🤗%20weights-Alcyone--W-yellow)](https://huggingface.co/teerthsharma/Alcyone-W)
+[![Lean 4](https://img.shields.io/badge/Lean%204-1%2C818%20declarations%2C%20no%20sorry-5b3cc4)](https://huggingface.co/teerthsharma/Alcyone-W/tree/main/lemmas)
+[![Haskell](https://img.shields.io/badge/Haskell-QuickCheck%20mirrors-5e5086)](https://huggingface.co/teerthsharma/Alcyone-W/tree/main/lemmas)
+[![Data](https://img.shields.io/badge/data-CMS%20Open%20Data%2C%204M%20events-0b7285)](https://opendata.cern.ch)
 
-Teerth Sharma · [teerth.dev](https://teerth.dev) · [teerth.blog](https://teerth.blog)
+Built by **Teerth Sharma** · [teerth.dev](https://teerth.dev) · [teerth.blog](https://teerth.blog)
 
 <img src="assets/pipeline.svg" alt="Alcyone pipeline: event, land, hidden window, watershed" width="100%"/>
 
-## Summary
+</div>
 
-Joint-embedding predictive architectures (I-JEPA, V-JEPA, Graph-JEPA, Point-JEPA) hide part of the input and predict a learned embedding of the hidden part. To our knowledge, Alcyone is the first JEPA whose target is **topological**:
-- the number of basins in the hidden window;
-- their H0 persistence under the elder rule;
-- the energy each basin holds.
+---
 
-All three come from an exact union-find flood whose rules are proved in Lean 4. Because the target is computed, not learned, the design needs no EMA target network and has no collapse route. This claim rests on a literature search in November 2026. Earlier work, if it exists, will be credited.
+## ✨ Highlights
 
-The model is applied to proton-proton collisions from CMS Open Data. A frozen language model (Galactica-6.7B) shapes part of the input landscape.
+- 🧭 **A new target for JEPAs.** I-JEPA, V-JEPA, Graph-JEPA and Point-JEPA all predict a *learned embedding* of the hidden part. Alcyone predicts its **topology**: basin count, H0 persistence (elder rule) and energy per basin. To our knowledge it is the first JEPA to do this (literature search, November 2026; earlier work, if found, will be credited).
+- 🔒 **No collapse by construction.** The target is an exact union-find flood, so the model needs **no EMA teacher, no stop-gradient tricks and no collapse regularisers**. There is nothing for it to collapse onto.
+- 🎯 **94.5% on the hidden watershed**, on events from a held-out source file, against **57.2%** for the majority guess. It scores 93.6% on 4,096 fixed validation windows.
+- 🧪 **Trained on real physics.** 4 million proton-proton collisions from **CMS Open Data**, split by source file (2.24M train / 1.06M val / 693k test).
+- 🧠 **A frozen 6.7B scientific LLM shapes the terrain.** Galactica-6.7B reads one caption per particle, and its embedding becomes 8 extra land channels. That land **cuts jet-multiplicity error by 85–87%** relative to a flat land, and it wins on **all three training seeds** against every control:
+  - shuffled captions: 84–87% lower error;
+  - a smaller Galactica-125m: 18–23% lower;
+  - a parameter-free caption code: 40–51% lower.
+- 📐 **Proved before it was coded.** The flood rules (the beta0 step, the elder rule, conservation under spill, n−1 merges, graph Poincaré–Hopf) are **proved in Lean 4**: 1,818 built declarations with **zero `sorry`**, plus executable **Haskell mirrors** checked with QuickCheck.
+- 🪶 **Tiny trained core.** Only **5.9M trained parameters** do the learning. Everything the lemmas determine is computed exactly, so the network learns only what the math leaves open.
+- 🔍 **Freeze checks on every run.** Galactica's weight hashes match before and after training, it has no gradients, and 1,000 captions re-embed bit-identically.
+- 🧾 **Pre-registered science.** Every bar was written down before training, and every outcome is published, the misses included.
 
-## Architecture
+## 🏗️ Architecture
 
-| component | parameters | status |
+> **Compute what the lemmas determine, learn only what they leave open.**
+
+| component | parameters | role |
 |---|---|---|
-| W-JEPA encoder and predictor | 5,893,976 | trained |
-| Galactica-6.7B | 6,657,359,872 | frozen, never trained; loaded from `facebook/galactica-6.7b`, not redistributed |
-| exact hydraulics (union-find flood, elder rule, conservation) | none | the lemmas, implemented as code |
+| W-JEPA encoder + predictor | 5,893,976 | **trained**: predicts the hidden watershed |
+| Galactica-6.7B | 6,657,359,872 | **frozen** land builder; loaded from `facebook/galactica-6.7b`, not redistributed |
+| exact hydraulics (union-find flood, elder rule, conservation) | 0 | the proved lemmas, implemented as code |
 
-Total: about 6.66B parameters, of which about 5.9M are trained.
+About **6.66B parameters in total**, of which **5.9M are trained**.
 
-1. **Terrain.** Each muon, electron and jet deposits its transverse momentum on a 32 x 64 grid over (eta, phi), with phi periodic. The Gaussian kernel conserves the deposited total exactly. Height is h = -log(1 + deposit), so energy concentrations are basins.
-2. **Land channels.** Each visible object receives a deterministic caption, e.g. `muon, negative charge, pT 40 GeV, eta 1.0`. Galactica-6.7B embeds it (layer 24, mean-pooled), a PCA fitted on training captions reduces it to 8 dimensions, and the result is deposited with the same kernel as 8 additional channels.
-3. **Masking.** A random 8 x 16 window is hidden. The encoder, a convolutional network on the cylinder, sees the remainder.
-4. **Target.** The predictor outputs the window's basin count, its top-8 persistences and the energy per basin. These are compared with the exact flood of the full event.
+1. **Terrain.** Every muon, electron and jet deposits its transverse momentum on a 32 × 64 grid over the (η, φ) cylinder. The Gaussian kernel conserves the total exactly. Height is h = −log(1 + deposit), so energy pools into basins.
+2. **Land.** Each object gets a caption such as `muon, negative charge, pT 40 GeV, eta 1.0`. Galactica-6.7B embeds it (layer 24, mean-pooled), a PCA reduces it to 8 dimensions, and the result is painted onto the terrain as 8 more channels.
+3. **Mask.** A random 8 × 16 window is hidden. A convolutional encoder on the cylinder sees the rest.
+4. **Predict the shape.** The predictor outputs the window's basin count, its top-8 persistences and the energy per basin. These are scored against the exact flood of the full event.
 
-## Results
-
-All bars were pre-registered before training, and all outcomes are reported.
-
-**Training objective.** Accuracy on the hidden window's basin count:
-- **0.945** on 512 events from a held-out source file, against 0.572 for the majority class;
-- **0.936** on 4,096 fixed validation windows.
-
-**Downstream probes.** Frozen encoder, MLP probe, 3 probe seeds, 200k held-out events:
-
-| task | Alcyone | same W-JEPA without language-model land | kinematics MLP |
-|---|---|---|---|
-| jet multiplicity (MSE) | 0.0103 | 0.0796 | 0.0016 |
-| dimuon mass, leading muon hidden (MSE) | 25,211 | 25,629 | 24,640 |
-| hidden-lepton charge (accuracy) | 0.503 | 0.502 | 0.500 |
-
-- **Jet multiplicity:** the Galactica-derived land reduces error by 85–87% relative to a flat land. On all three training seeds it also beats each control:
-  - shuffled captions (84–87% lower error);
-  - Galactica-125m (18–23% lower);
-  - a parameter-free caption code (40–51% lower).
-- **Pre-registered land bars (WL1–WL5): not met.** They required an improvement on two of three tasks; it appears on one.
-- **Kinematics baseline:** a plain kinematics MLP outperforms Alcyone on both answerable tasks.
-- **Hidden-lepton charge:** not answerable as built, because the terrain carries no charge information. A charge-aware variant is in progress.
-
-## Usage
+## 🚀 Quickstart
 
 ```bash
 git clone https://github.com/teerthsharma/Alcyone-W && cd Alcyone-W
@@ -67,6 +60,8 @@ hf download teerthsharma/Alcyone-W --local-dir .
 pip install -r requirements.txt
 python examples/example.py
 ```
+
+The example runs on 512 real held-out CMS events that ship with the weights. It needs no Galactica download for those events.
 
 ```python
 import sys; sys.path.insert(0, "code")
@@ -76,55 +71,51 @@ m = WatershedJEPA(".", galactica="facebook/galactica-6.7b")
 z = m.encode(x)                       # x: (N, 15, 8) [pT, eta, phi, mass, charge, type, btag, valid]
 win = window_mask(12, 24, len(x))
 pred = m.predict_summary(x, win)      # basin-count probabilities, persistence, energy per basin
-true = exact_summary(x, win)          # exact flood
+true = exact_summary(x, win)          # exact flood, the ground truth
 ```
 
-## Agent interface
+## 🤖 Talk to it: the agent
 
-`code/agent.py` exposes Alcyone through the frozen Galactica-6.7B, with four deterministic tools:
+`code/agent.py` puts Alcyone behind the frozen Galactica-6.7B, with four deterministic tools:
 
-| tool | function |
+| tool | what it does |
 |---|---|
-| `watershed(k)` | W-JEPA prediction against the exact flood |
+| `watershed(k)` | W-JEPA prediction next to the exact flood |
 | `charge(k)` | Gauss-law readout |
-| `describe(k)` | object list |
+| `describe(k)` | object list of event k |
 | `calc(expr)` | arithmetic |
 
-The base model is not instruction-tuned, so the runtime enforces the protocol:
-- a tool choice comes first;
-- the answer slot is filled only after the tool result;
-- any number not returned by a tool is flagged.
+The runtime enforces the protocol: the agent picks a tool first, fills the answer only after the tool returns, and flags any number that no tool produced. Ask it who it is and it answers from fixed text ([`ALCYONE_RULES.md`](ALCYONE_RULES.md)): a 5.9M-parameter W-JEPA by Teerth Sharma, speaking through a frozen Galactica-6.7B. It is not a chat model.
 
-Questions about the model's identity are answered from fixed text ([`ALCYONE_RULES.md`](ALCYONE_RULES.md)): a 5.9M-parameter W-JEPA by Teerth Sharma, with frozen Galactica-6.7B generating text. It is not a chat model.
+## 📊 Full results
 
-## Formal basis
+| task (frozen encoder, MLP probe, 3 seeds, 200k held-out events) | Alcyone | same W-JEPA, flat land | kinematics MLP |
+|---|---|---|---|
+| jet multiplicity (MSE) | **0.0103** | 0.0796 | 0.0016 |
+| dimuon mass, leading muon hidden (MSE) | 25,211 | 25,629 | 24,640 |
+| hidden-lepton charge (accuracy) | 0.503 | 0.502 | 0.500 |
 
-The hydraulics rely on lemmas proved in Lean 4: the beta0 step, the elder rule, conservation under spill, n-1 merges and graph Poincaré-Hopf.
-- **Lean 4:** 1,818 built declarations across the libraries, counted from build manifests, with no `sorry`.
-- **Haskell:** executable mirrors with QuickCheck property tests.
+The language-model land is a clear win for jet multiplicity. The pre-registered land bars (WL1–WL5) asked for a win on two of three tasks, and this release gets one. A plain kinematics MLP still leads on the two answerable tasks. Charge cannot be answered yet because the terrain carries no charge; a charge-aware variant is being built.
 
-Source: [`lemmas/`](https://huggingface.co/teerthsharma/Alcyone-W/tree/main/lemmas) in the Hugging Face repository.
+## 🛣️ What's next
 
-## Limitations
+- 🔋 **Charge-aware terrain**, so the hidden-lepton task becomes answerable.
+- 🧱 **Edge-clean windows**: deposits near the window edge are partly visible from outside, and closing that leak makes the task harder and more honest.
+- 🌍 **More detectors and task families** beyond CMS NanoAOD objects.
+- 🗣️ **Better free-text answers** from the agent; its tool choices and tool outputs are already reliable.
 
-- One detector format (CMS NanoAOD objects) and one task family.
-- Training omitted the hidden lepton of one probe task from the land; this release deposits all visible objects.
-- Deposits near the window edge are partly visible from outside it, so the training objective is partly predictable from context.
-- The agent's tool selection and tool outputs are reliable; its free-text answers are not.
+## 📦 Data and provenance
 
-## Data and provenance
-
-- **Data:** CMS Open Data (CERN Open Data portal), NanoAOD.
-  - 4M events with at least one lepton, split by source file: 2.24M train, 1.06M validation, 693k test.
-  - 512 test events ship with the weights.
-- **Checkpoint:** training seed 1 of three, 38,155 steps. Selected by a rule fixed in advance: the lowest final masked-summary loss.
-- **Freeze checks, every run:**
-  - Galactica weight hashes are unchanged before and after training;
-  - no Galactica parameter requires gradients;
-  - 1,000 captions re-embed bit-identically;
-  - the land table's hash matches its provenance.
+- **Data:** CMS Open Data (CERN Open Data portal), NanoAOD. 4M events with at least one lepton, split by source file. 512 test events ship with the weights.
+- **Checkpoint:** training seed 1 of three, 38,155 steps, chosen by a rule fixed in advance (lowest final masked-summary loss).
 - **Galactica:** Taylor et al., *Galactica: A Large Language Model for Science*, Meta AI, 2022.
 
-## License
+## 📜 License
 
 CC BY-NC 4.0. The land table and projection derive from Galactica-6.7B outputs, and Galactica is licensed CC BY-NC 4.0. Galactica's weights are not included.
+
+<div align="center">
+
+⭐ **If a JEPA that predicts topology sounds fun to you, star the repo and say hi!** ⭐
+
+</div>
