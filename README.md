@@ -11,6 +11,8 @@
 ![frozen](https://img.shields.io/badge/frozen-Galactica--6.7B-a78bfa)
 ![data](https://img.shields.io/badge/data-CMS%20Open%20Data-f472b6)
 
+### ✨ First of its kind: to our knowledge, the first JEPA whose prediction target is *topology*, a watershed computed exactly from proved lemmas, instead of a learned embedding.
+
 **Built by [Teerth Sharma](https://teerth.dev)** · from proved lemmas (Lean 4 + Haskell) · first model of a new design
 
 <img src="assets/pipeline.svg" alt="Alcyone pipeline: event, land, hidden window, watershed" width="100%"/>
@@ -21,7 +23,7 @@
 
 ## The idea in one breath
 
-Most JEPAs hide part of the input and predict a learned embedding of it. **Alcyone predicts its topology instead.**
+Every JEPA we could find (I-JEPA, V-JEPA, Graph-JEPA, Point-JEPA and the rest) hides part of the input and predicts a learned embedding of it. **Alcyone is the first we know of that predicts its topology instead.** The claim rests on a literature search in November 2026. If you know earlier work, open an issue and we'll credit it.
 
 A particle collision becomes a landscape, and a window of that landscape is hidden. From the rest, Alcyone predicts what rain would do inside the window:
 - how many separate lakes (basins) form;
