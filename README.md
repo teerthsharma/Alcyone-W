@@ -100,7 +100,7 @@ For jet multiplicity the Galactica land cuts the error by 85–87%. The effect s
 
 So the gain depends on the captions being attached to the right particles and on the size of the model reading them. Something in the geometry of a 6.7B scientific language model helps with counting jets, and nobody asked it to learn that.
 
-**Where it stands.** The pre-registered land bars (WL1–WL5) asked for a gain on two of the three tasks, and the release has one. A plain kinematics MLP still does better on both answerable tasks; we report this the way one reports a counterexample, promptly and with mild annoyance. On charge the model scores 0.503 on a two-class problem, which is a coin, and we have checked the coin. That one is not a mystery: the terrain has no charge channel, so the information is not there to find. The charge-aware version is next.
+**Where it stands.** The pre-registered land bars (WL1–WL5) asked for a gain on two of the three tasks, and the release has one. A plain kinematics MLP still does better on both answerable tasks; we report this the way one reports a counterexample, promptly and with mild annoyance. On charge the model scores 0.503 on a two-class problem, which is a coin, and we have checked the coin. That one is not a mystery: the terrain has no charge channel, so the information is not there to find. A separate pre-registered run (not the released checkpoint) then added a signed charge channel and a Gauss target. Charge became learnable: 0.619, against 0.539 without the Gauss target and 0.573 for a frozen random encoder, on all three probe seeds. It still falls short of the one-line Gauss rule (minus the sign of the visible charge sum), which scores 0.652 with no parameters, so bar C1 failed and we do not claim that the network reads charge topologically. The lemma beats the learner, which is what lemmas are for.
 
 ## Usage
 
@@ -145,7 +145,7 @@ These are the questions we find most interesting. Start with the [introduction t
 - **Other spaces.** Nothing here is specific to collisions. Any data with a natural height function (images, fields, point clouds with a density, graphs with node weights) admits the same construction.
 - **Leakage at the boundary.** Deposits near the window edge are partly visible from outside, so part of the target is predictable from context. What is the right notion of a clean window?
 - **Why does the land help?** Shuffled captions destroy the effect and a smaller model weakens it. Which directions in Galactica's layer 24 carry it?
-- **Charge.** Adding a charge channel should make the third probe answerable. Does topology then help with it?
+- **Charge.** With a charge channel the network learns charge (0.619) but stays below the parameter-free Gauss rule (0.652). Can a learned model add anything the lemma does not already give?
 
 ## Data and provenance
 
