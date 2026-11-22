@@ -1,0 +1,86 @@
+{
+ "ALCYONE_RULES.md": {
+  "bytes": 2042,
+  "sha256": "eef8cbb85009db7021c7a960a8869bac9d7d084068d1ff89d20d76b4f62d43d7"
+ },
+ "LICENSE": {
+  "bytes": 19347,
+  "sha256": "41003d4a74749c0220e33dd415042164b5a1093ed401f36277234f772d22d3d0"
+ },
+ "README.md": {
+  "bytes": 8871,
+  "sha256": "e003a03d21fadc9c91cd4ad78f126610a8454d9473e6fadf165c0c4d62664c20"
+ },
+ "model.safetensors": {
+  "bytes": 23577328,
+  "sha256": "a7174e34cc4cfd0bf0a8ad204adf724cb55f65839f3084185f545b82837a7528"
+ },
+ "requirements.txt": {
+  "bytes": 59,
+  "sha256": "a953d191084c883f021dbe9b15169fbde64dad8ce5c4630b55a4d73f2e6ba098"
+ },
+ "examples/cms_test_sample.npz": {
+  "bytes": 261328,
+  "sha256": "66098348be6669b31e64339b6eb3699a2434bcb26a17518d48d38ef62fe95338"
+ },
+ "examples/example.py": {
+  "bytes": 1318,
+  "sha256": "68a75672b27928bcf283fbcbe96e88291566c6df5fa7fd3e5660440d6e271d90"
+ },
+ "code/agent.py": {
+  "bytes": 10379,
+  "sha256": "e70a28527fbe8bf4ee8d8c39e98016ef7c991d44a64fb508e341168f44be0276"
+ },
+ "code/alcyone.py": {
+  "bytes": 8911,
+  "sha256": "94661ba68c3b7f9be9ae44d14751f1e1a2ec21699e7092a6e563180f2e643944"
+ },
+ "code/hydraulics.py": {
+  "bytes": 6322,
+  "sha256": "3ae6b1ac30ff9707f4900fcc47c8e1757eb48c5ad0e415b33e63c67bee38a25d"
+ },
+ "code/land_terrain.py": {
+  "bytes": 2559,
+  "sha256": "25d5dd88a448042f27b95b293cec07cd0bdcf383dc589175f36200dcb360d7de"
+ },
+ "code/model.py": {
+  "bytes": 3138,
+  "sha256": "ab1601c2fba2ded9a3afdbb6b250d53165771cf547e18b949a553bccc6937844"
+ },
+ "code/model_land.py": {
+  "bytes": 2317,
+  "sha256": "6fe62f619c0efc815b43182a957e76c184b514b23fbaf69320c32f3e02290289"
+ },
+ "code/terrain.py": {
+  "bytes": 2711,
+  "sha256": "da289f27d709cc73d16fa89ada8d5034534f9fd2b79e5e3a33681bd288945c23"
+ },
+ "assets/pipeline.svg": {
+  "bytes": 3985,
+  "sha256": "747790f3d7ef66b5675f6a001e401beae3cd09ac7f9b15877170bc8c1e9cb329"
+ },
+ "land/caption_records.npy": {
+  "bytes": 222080,
+  "sha256": "3cfc8bcd5d9b2a0410a61a667337368c3965ebbd8571c469389aa541e02aa031"
+ },
+ "land/captions.json": {
+  "bytes": 324020,
+  "sha256": "9305146baafef1cff5392a5bdc779505e23b94ff2988025e06d039dd839cc5dc"
+ },
+ "land/captions_extra.json": {
+  "bytes": 143,
+  "sha256": "e05e684d3621d40f10ffde78af533f7d431a4699f27fc90e78c4a4ecbd681968"
+ },
+ "land/gal6.7b_L24_projection.npz": {
+  "bytes": 296054,
+  "sha256": "fe5aa618e86433ebca618302abd1bf150d855ea17f9aa00c95d1d1a1dd721ee1"
+ },
+ "land/psi_extra.npy": {
+  "bytes": 224,
+  "sha256": "464a1d4dad326613e58e73993196be35489400c1e6ad6d9e1bfe95c528ae8630"
+ },
+ "land/psi_gal6.7b_L24.npy": {
+  "bytes": 222080,
+  "sha256": "cabda201a37e8818a1eb2aa5ed643606c37c31af6b40d17868622a1c6993344a"
+ }
+}

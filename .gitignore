@@ -1,0 +1,5 @@
+model.safetensors
+land/
+examples/*.npz
+__pycache__/
+*.pyc

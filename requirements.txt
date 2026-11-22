@@ -1,0 +1,5 @@
+torch>=2.2
+numpy
+safetensors
+transformers>=4.40
+accelerate
